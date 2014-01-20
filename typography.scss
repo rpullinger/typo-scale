@@ -1,0 +1,222 @@
+/*------------------------------------*\
+    VARIABLES
+\*------------------------------------*/
+
+$base-unit: 24;
+
+$text-color: #222;
+$base-font-size: 16;
+$base-font-family: Helvetica, sans-serif;
+$base-line-height: $base-unit;
+
+$heading-font-family: Georgia, serif;
+$heading-line-height: $base-line-height;
+
+$fixed-font-family: monospaced;
+$fixed-font-size: $base-font-size;
+$fixed-line-height: $base-line-height;
+
+
+/*------------------------------------*\
+    MIXINS
+\*------------------------------------*/
+
+@mixin rem($property, $values){
+
+    $rem: ();
+    $px: ();
+
+    @each $value in $values {
+        $rem: append($rem, 0rem + $value / $base-font-size);
+        $px: append($px, 0px + $value);
+    }
+
+    #{$property}: $px;
+    #{$property}: $rem;
+}
+
+@mixin font-rem($size){
+    font-size: 0px + $size;
+    font-size: 0rem + $size / $base-font-size;
+}
+
+@mixin font-size($size, $line-height: $base-line-height){
+    @include font-rem($size);
+    line-height: ceil($size / $line-height) * ($line-height / $size);
+}
+
+
+/*------------------------------------*\
+    BASE
+\*------------------------------------*/
+
+/*
+Border box everything! http://paulirish.com/2012/box-sizing-border-box-ftw/
+ */
+*{
+    &,
+    &:before,
+    &:after{
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+}
+
+
+
+
+/*
+Make images responsive by default
+ */
+img{
+    max-width: 100%;
+}
+
+
+
+
+/*
+Get forms elements to follow our font styling
+ */
+input,
+select,
+textarea,
+button{
+    font: inherit;
+}
+
+
+
+/*
+Shared vertical rhythm - csswizardry.com/2012/06/single-direction-margin-declarations
+ */
+h1, h2, h3, h4, h5, h6,
+ul, ol, dl,
+blockquote,p,address,
+table,
+fieldset,figure,
+hr,
+pre{
+    margin-top: 0;
+    @include rem('margin-bottom', 24);
+
+    &:last-child,
+    &.last{ // remove from last if required
+       @extend %flush;
+    }
+}
+
+    %flush{ margin-bottom: 0; }
+    %tight{ @include rem('margin-bottom', 12); }
+    %spaced{ @include rem('margin-bottom', 48); }
+
+
+/*------------------------------------*\
+    TYPOGRAPHY
+\*------------------------------------*/
+
+
+/**
+ * Useful placeholders
+ */
+
+%hn{ font-family: $heading-font-family; }
+%h1{ @include font-size(30, $heading-line-height); }
+%h2{ @include font-size(24, $heading-line-height); }
+%h3{ @include font-size(22, $heading-line-height); }
+%h4{ @include font-size(20, $heading-line-height); }
+%h5{ @include font-size(18, $heading-line-height); }
+%h6{ @include font-size(16, $heading-line-height); }
+
+%fixed{
+    font-family: $fixed-font-family;
+    @include font-size($fixed-font-size, $fixed-line-height);
+}
+
+%mega{ @include font-size(50, $heading-line-height); }
+%huge{ @include font-size(40, $heading-line-height); }
+%small{ @include font-size(12); }
+
+%quiet{ color: #aaa; }
+%loud{ color: green; }
+
+%italic{ font-style: italic; }
+%bold{ font-weight: 900; }
+
+/**
+ * Style the basics
+ */
+
+body{
+    color: $text-color;
+    font-family: $base-font-family;
+    @include font-size($base-font-size);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    @extend %hn;
+}
+
+h1{ @extend %h1; }
+h2{ @extend %h2; }
+h3{ @extend %h3; }
+h4{ @extend %h4; }
+h5{ @extend %h5; }
+h6{ @extend %h6; }
+
+i,
+em{
+    @extend %italic;
+}
+
+b,
+strong{
+    @extend %bold;
+}
+
+pre,
+code{
+    @extend %fixed;
+}
+
+small{
+    @extend %small;
+    @extend %quiet;
+}
+
+sub{ vertical-align: bottom; }
+sup{ vertical-align: top; }
+
+hr{
+    border: 1px solid red;
+}
+
+ul,
+ol{
+    @include rem('margin-left', $base-unit);
+}
+
+blockquote{
+    @include rem('margin-left', $base-unit);
+    @include rem('margin-right', $base-unit);
+}
+
+
+/*------------------------------------*\
+    BOXES
+\*------------------------------------*/
+
+%boxed{
+    @include rem('padding', $base-unit);
+}
+
+.note{
+    @extend %boxed;
+    background: #eee;
+}
